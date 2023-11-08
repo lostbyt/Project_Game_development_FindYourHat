@@ -62,49 +62,52 @@ class Field {
 
 
    hatAndPlayerPosition(field, numOfRaw, numOfCol) {
-      let charX;
-      let charY;
-      let hatX;
-      let hatY;
-      
-      const isNotSame   = (hatY != charY) && (hatX != charX);
-      const isFarEnough = (Math.abs(charX - hatX) > (numOfCol - 2)) && (Math.abs(charY - hatY) > (numOfRaw - 2));
-      
+
       do {
-         charX = this.randomCol(numOfCol);
-         charY = this.randomRaw(numOfRaw);
-         hatX  = this.randomCol(numOfCol);
-         hatY  = this.randomRaw(numOfRaw);
-      } while (isNotSame && isFarEnough);
+         let charX = this.randomCol(numOfCol);
+         let charY = this.randomRaw(numOfRaw);
+         let hatX  = this.randomCol(numOfCol);
+         let hatY  = this.randomRaw(numOfRaw);
 
-      field[hatY][hatX] = this.hatDesign;
-      field[charY][charX] = this.pathCharacter;
-      this.positionX = charX;
-      this.positionY = charY;
+         const diffX        = hatX != charX;
+         const diffY        = hatY != charY;
+         const isFarEnoughX = Math.abs(charX - hatX) > (numOfCol - (numOfCol - 2));
+         const isFarEnoughY = Math.abs(charY - hatY) > (numOfRaw - (numOfRaw - 2));
 
-   return field;
+         if ( diffX && diffY && isFarEnoughX && isFarEnoughY) {
+            
+            field[hatY][hatX] = this.hatDesign;
+            field[charY][charX] = this.pathCharacter;
+            this.positionX = charX;
+            this.positionY = charY;
+            return field;
+         }
+
+      } while (true);
+
+
+
+
+   
    }
 
 
    newHole(numOfCol, numOfRaw) {
 
-
-      // let notOnPath = this.field[newHoleY][newHoleX] != this.pathCharacter;
-      // let notOnHat = this.field[newHoleY][newHoleX] != this.hatDesign;
-      // let notOnHole = this.field[newHoleY][newHoleX] != this.holeDesign;
-
       do {
          let newHoleX = this.randomCol(numOfCol);
          let newHoleY = this.randomCol(numOfRaw);
 
-         if ( (this.field[newHoleY][newHoleX] != this.pathCharacter) &&  (this.field[newHoleY][newHoleX] != this.hatDesign) &&  (this.field[newHoleY][newHoleX] != this.holeDesign)) {
+         const notOnPath = this.field[newHoleY][newHoleX] != this.pathCharacter;
+         const notOnHat = this.field[newHoleY][newHoleX] != this.hatDesign;
+         const notOnHole = this.field[newHoleY][newHoleX] != this.holeDesign;
+
+         if ( notOnPath &&  notOnHat &&  notOnHole) {
             this.field[newHoleY][newHoleX] = this.holeDesign;
             break;
-         } else {
-            let newHoleX = this.randomCol(numOfCol);
-            let newHoleY = this.randomCol(numOfRaw);
          }
-      }while (true);
+
+      } while (true);
 
    }
 
@@ -314,8 +317,8 @@ class Game extends Field {
 
 
 
-const game = new Game(5, 10, 20);
-game.generateField();
-game.intro()
-game.msgIntro();
-game.playerMove();
+const bobGame = new Game(5, 10, 20);
+bobGame.generateField();
+bobGame.intro()
+bobGame.msgIntro();
+bobGame.playerMove();
